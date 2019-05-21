@@ -1,0 +1,23 @@
+body, html {
+    height: 98%;
+}
+div#header div#errorDivision, div#header div#formDivision {
+    overflow: auto;
+}
+div#header div#errorDivision a, div#header div#errorDivision span, div#header div#formDivision form {
+    float: right;
+}
+div#header div#errorDivision span {
+    margin-right: 5px;
+}
+div#main {
+    height: 92%;
+}
+div#main div#mainInner {
+    margin: auto;
+    width: 50%;
+}
+
+.error {
+    color: #ff0000;
+}
