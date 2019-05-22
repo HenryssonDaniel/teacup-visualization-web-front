@@ -8,12 +8,11 @@ function signUp(element) {
 
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status !== ok) {
+        if (this.readyState === 4 && this.status !== ok)
             document.getElementById('signUpError').textContent = "Something went wrong, try again later";
-        }
     };
 
-    xmlHttpRequest.open('POST', '/logIn', true);
+    xmlHttpRequest.open('POST', '/signUp', true);
     xmlHttpRequest.setRequestHeader('Content-type', 'application/json');
     xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}",
     "firstName":"${element.querySelector('input[name="firstName"]').value}", 

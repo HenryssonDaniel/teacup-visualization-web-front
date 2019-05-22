@@ -12,7 +12,7 @@ function recover(element) {
             let recoverMessage = document.getElementById('recoverMessage');
             let content;
 
-            if(this.status === ok) {
+            if (this.status === ok) {
                 content = 'A link to recover your account has been sent to your email';
             } else {
                 content = 'Something went wrong, try again later';

@@ -1,9 +1,11 @@
 const ok = 200;
+
 let page = 'signUp';
 
-if (window.location.search === '?recover') {
+if (location.search === '?recover')
     page = 'recover';
-}
+else if (location.search === '?dashboard')
+    page = 'dashboard';
 
 window.onload = () => {
     document.getElementById('logIn').addEventListener('submit', event => {
@@ -14,17 +16,30 @@ window.onload = () => {
     loadMain();
 };
 
+function loadJavaScript(url) {
+    let xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.onreadystatechange = () => {
+        if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
+            let script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+
+            document.head.appendChild(script);
+        }
+    };
+
+
+    xmlHttpRequest.open('HEAD', url, true);
+    xmlHttpRequest.send();
+}
+
 function loadMain() {
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
             document.getElementById('mainInner').insertAdjacentHTML('afterbegin', xmlHttpRequest.responseText);
 
-            let script = document.createElement('script');
-            script.src = `js/${page}.js`;
-            script.type = 'text/javascript';
-
-            document.head.appendChild(script);
+            loadJavaScript(`js/${page}.js`);
         }
     };
 
@@ -38,21 +53,16 @@ function logIn(element) {
 
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status !== ok) {
-            let content;
-
-            if (this.status === unauthorized) {
-                content = 'Incorrect credentials';
-            } else {
-                content = 'Something went wrong, try again later';
-            }
-
-            document.getElementById('logInError').textContent = content;
-        }
+        if (this.readyState === 4)
+            if (this.status === ok)
+                location.replace('?dashboard');
+            else
+                document.getElementById('logInError').textContent = this.status === unauthorized
+                    ? 'Incorrect credentials' : 'Something went wrong, try again later';
     };
 
-    xmlHttpRequest.open('POST', 'localhost/logIn', true);
-    xmlHttpRequest.setRequestHeader('Content-type', 'application/json');
+    xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/logIn`, true);
+    xmlHttpRequest.setRequestHeader('Content-type', 'text/plain');
     xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}", 
     "password":"${element.querySelector('input[name="password"]').value}"}`);
 }
