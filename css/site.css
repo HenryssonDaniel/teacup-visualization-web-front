@@ -15,6 +15,7 @@ div#main {
 }
 div#main div#mainInner {
     margin: auto;
+    overflow: auto;
     width: 50%;
 }
 
