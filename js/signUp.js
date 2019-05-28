@@ -12,8 +12,8 @@ function signUp(element) {
             document.getElementById('signUpError').textContent = "Something went wrong, try again later";
     };
 
-    xmlHttpRequest.open('POST', '/signUp', true);
-    xmlHttpRequest.setRequestHeader('Content-type', 'application/json');
+    xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/api/account/signUp`, true);
+    xmlHttpRequest.setRequestHeader('Content-type', 'text/plain');
     xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}",
     "firstName":"${element.querySelector('input[name="firstName"]').value}", 
     "lastName":"${element.querySelector('input[name="lastName"]').value}",
