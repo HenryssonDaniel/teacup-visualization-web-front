@@ -23,7 +23,7 @@ function recover(element) {
         }
     };
 
-    xmlHttpRequest.open('POST', '/recover', true);
-    xmlHttpRequest.setRequestHeader('Content-type', 'application/json');
+    xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/api/account/recover`, true);
+    xmlHttpRequest.setRequestHeader('Content-type', 'text/plain');
     xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}"}`);
 }
