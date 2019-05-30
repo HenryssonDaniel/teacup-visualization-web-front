@@ -1,20 +1,17 @@
 const ok = 200;
 
-let page = 'signUp';
+let authorized = false;
+let page = "";
 
-if (location.search === '?recover')
-    page = 'recover';
-else if (location.search === '?dashboard')
-    page = 'dashboard';
+let search = location.search;
+if (search === '?recover' || search === '?signUp') {
+    page = `account/${search.substr(1)}`;
+} else {
+    authorized = true;
+    page = 'dashboard/dashboard';
+}
 
-window.onload = () => {
-    document.getElementById('logIn').addEventListener('submit', event => {
-        logIn(event.target);
-        event.preventDefault();
-    });
-
-    loadMain();
-};
+window.onload = () => load();
 
 function loadJavaScript(url) {
     let xmlHttpRequest = new XMLHttpRequest();
@@ -28,8 +25,27 @@ function loadJavaScript(url) {
         }
     };
 
-
     xmlHttpRequest.open('HEAD', url, true);
+    xmlHttpRequest.send();
+}
+
+function load() {
+    loadHeader();
+    loadMain();
+}
+
+function loadHeader() {
+    let xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.onreadystatechange = () => {
+        if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
+            document.getElementById('headerInner').insertAdjacentHTML('afterbegin',  xmlHttpRequest.responseText);
+
+            loadJavaScript("js/header/" + (authorized ? "menu" : "logIn") + ".js");
+        }
+    };
+
+    xmlHttpRequest.open('GET', "html/header/" + (authorized ? "menu" : "logIn") + ".html", true);
+    xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
     xmlHttpRequest.send();
 }
 
@@ -43,27 +59,7 @@ function loadMain() {
         }
     };
 
-    xmlHttpRequest.open('GET', `${page}.html`, true);
+    xmlHttpRequest.open('GET', `html/${page}.html`, true);
     xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
     xmlHttpRequest.send();
-}
-
-function logIn(element) {
-    const unauthorized = 401;
-
-    let xmlHttpRequest = new XMLHttpRequest();
-    xmlHttpRequest.onreadystatechange = function() {
-        if (this.readyState === 4)
-            if (this.status === ok)
-                location.replace('?dashboard');
-            else
-                document.getElementById('logInError').textContent = this.status === unauthorized
-                    ? 'Incorrect credentials' : 'Something went wrong, try again later';
-    };
-
-    xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/api/account/logIn`, true);
-    xmlHttpRequest.setRequestHeader('Content-type', 'text/plain');
-    xmlHttpRequest.withCredentials = true;
-    xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}", 
-    "password":"${element.querySelector('input[name="password"]').value}"}`);
 }
