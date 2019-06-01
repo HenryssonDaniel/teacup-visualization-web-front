@@ -8,12 +8,16 @@ function signUp(element) {
 
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status !== ok)
-            document.getElementById('signUpError').textContent = "Something went wrong, try again later";
+        if (this.readyState === 4)
+            if (this.status === ok)
+                location.replace('?dashboard');
+            else
+                document.getElementById('signUpError').textContent = "Something went wrong, try again later";
     };
 
     xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/api/account/signUp`, true);
     xmlHttpRequest.setRequestHeader('Content-type', 'text/plain');
+    xmlHttpRequest.withCredentials = true;
     xmlHttpRequest.send(`{"email":"${element.querySelector('input[name="email"]').value}",
     "firstName":"${element.querySelector('input[name="firstName"]').value}", 
     "lastName":"${element.querySelector('input[name="lastName"]').value}",
