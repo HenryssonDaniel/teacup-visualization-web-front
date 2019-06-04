@@ -1,17 +1,52 @@
 const ok = 200;
 
-let authorized = false;
-let page = "";
+window.onload = () => load();
 
-let search = location.search;
-if (search === '?recover' || search === '?signUp') {
-    page = `account/${search.substr(1)}`;
-} else {
-    authorized = true;
-    page = 'dashboard/dashboard';
+function load() {
+    let search = location.search;
+    if (search === '?recover' || search === '?signUp') {
+        let xmlHttpRequest = new XMLHttpRequest();
+        xmlHttpRequest.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                let authorized;
+                let page;
+
+                if (this.status === ok) {
+                    authorized = true;
+                    page = 'dashboard/dashboard';
+                } else {
+                    authorized = false;
+                    page = `account/${search.substr(1)}`;
+                }
+
+                loadHeader(authorized);
+                loadMain(page);
+            }
+        };
+        xmlHttpRequest.withCredentials = true;
+
+        xmlHttpRequest.open('GET', `${location.protocol}//${location.hostname}:5000/api/account/authorized`, true);
+        xmlHttpRequest.send();
+    } else {
+        loadHeader(true);
+        loadMain('dashboard/dashboard');
+    }
 }
 
-window.onload = () => load();
+function loadHeader(authorized) {
+    let xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.onreadystatechange = () => {
+        if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
+            document.getElementById('headerInner').insertAdjacentHTML('afterbegin',  xmlHttpRequest.responseText);
+
+            loadJavaScript("js/header/" + (authorized ? "menu" : "logIn") + ".js");
+        }
+    };
+
+    xmlHttpRequest.open('GET', "html/header/" + (authorized ? "menu" : "logIn") + ".html", true);
+    xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
+    xmlHttpRequest.send();
+}
 
 function loadJavaScript(url) {
     let xmlHttpRequest = new XMLHttpRequest();
@@ -29,27 +64,7 @@ function loadJavaScript(url) {
     xmlHttpRequest.send();
 }
 
-function load() {
-    loadHeader();
-    loadMain();
-}
-
-function loadHeader() {
-    let xmlHttpRequest = new XMLHttpRequest();
-    xmlHttpRequest.onreadystatechange = () => {
-        if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
-            document.getElementById('headerInner').insertAdjacentHTML('afterbegin',  xmlHttpRequest.responseText);
-
-            loadJavaScript("js/header/" + (authorized ? "menu" : "logIn") + ".js");
-        }
-    };
-
-    xmlHttpRequest.open('GET', "html/header/" + (authorized ? "menu" : "logIn") + ".html", true);
-    xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
-    xmlHttpRequest.send();
-}
-
-function loadMain() {
+function loadMain(page) {
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
