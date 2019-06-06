@@ -4,7 +4,7 @@ window.onload = () => load();
 
 function load() {
     let search = location.search;
-    if (search === '?recover' || search === '?signUp') {
+    if (search === '?changePassword' || search === '?recover' || search === '?signUp') {
         let xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.onreadystatechange = function() {
             if (this.readyState === 4) {
