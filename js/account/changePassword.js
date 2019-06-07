@@ -14,6 +14,7 @@ function changePassword(element) {
             else
                 document.getElementById('changePasswordMessage').textContent = 'Something went wrong, try again later';
     };
+    xmlHttpRequest.withCredentials = true;
 
     xmlHttpRequest.open('POST', `${location.protocol}//${location.hostname}:5000/api/account/changePassword`,
         true);
