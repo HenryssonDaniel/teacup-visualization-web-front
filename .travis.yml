@@ -3,5 +3,23 @@ addons:
     organization: "henryssondaniel-github"
     token:
       secure: $SONAR_TOKEN
+language: node_js
+matrix:
+  include:
+    - node_js: "6"
+      env: FULL_RUN=false
+    - node_js: "7"
+      env: FULL_RUN=false
+    - node_js: "8"
+      env: FULL_RUN=false
+    - node_js: "9"
+      env: FULL_RUN=false
+    - node_js: "10"
+      env: FULL_RUN=false
+    - node_js: "11"
+      env: FULL_RUN=false
+    - node_js: "12"
+      env: FULL_RUN=true
 script:
-  - sonar-scanner
+  - if [ "$FULL_RUN" == "false" ]; then npm test; fi
+  - if [ "$FULL_RUN" != "false" ]; then npm test; sonar-scanner; fi
