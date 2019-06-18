@@ -2,8 +2,8 @@ const ok = 200;
 
 window.onload = () => load();
 
-function load() {
-    let search = location.search;
+let load = () => {
+    let search = locationWrapper.search();
     if (search === '?changePassword' || search === '?recover' || search === '?signUp') {
         let xmlHttpRequest = new XMLHttpRequest();
         xmlHttpRequest.onreadystatechange = function() {
@@ -31,50 +31,55 @@ function load() {
         loadHeader(true);
         loadMain('dashboard/dashboard');
     }
-}
+};
 
-function loadHeader(authorized) {
+let loadHeader = authorized => {
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
             document.getElementById('headerInner').insertAdjacentHTML('afterbegin',  xmlHttpRequest.responseText);
 
-            loadJavaScript("js/header/" + (authorized ? "menu" : "logIn") + ".js");
+            loadJavaScript("header/" + (authorized ? "menu" : "logIn"));
         }
     };
 
     xmlHttpRequest.open('GET', "html/header/" + (authorized ? "menu" : "logIn") + ".html", true);
     xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
     xmlHttpRequest.send();
-}
+};
 
-function loadJavaScript(url) {
+let loadJavaScript = url => {
+    let javaScript = `js/${url}.js`;
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
             let script = document.createElement('script');
-            script.src = url;
+            script.src = javaScript;
             script.type = 'text/javascript';
 
             document.head.appendChild(script);
         }
     };
 
-    xmlHttpRequest.open('HEAD', url, true);
+    xmlHttpRequest.open('HEAD', javaScript, true);
     xmlHttpRequest.send();
-}
+};
 
-function loadMain(page) {
+let loadMain = page => {
     let xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === ok) {
             document.getElementById('mainInner').insertAdjacentHTML('afterbegin', xmlHttpRequest.responseText);
 
-            loadJavaScript(`js/${page}.js`);
+            loadJavaScript(page);
         }
     };
 
     xmlHttpRequest.open('GET', `html/${page}.html`, true);
     xmlHttpRequest.setRequestHeader('Content-type', 'text/html');
     xmlHttpRequest.send();
-}
+};
+
+let locationWrapper = {
+    search: () => location.search
+};

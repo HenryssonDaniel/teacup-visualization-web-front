@@ -11,7 +11,7 @@ xmlHttpRequest.onreadystatechange = function() {
             let json = JSON.parse(this.responseText);
 
             let account = json["account"];
-            document.getElementById('name').textContent = account["firstName"] + " " + account["lastName"];
+            document.getElementById('name').textContent = `${account["firstName"]} ${account["lastName"]}`;
 
             if (this.status === ok) {
                 let sessions = json["sessions"];
