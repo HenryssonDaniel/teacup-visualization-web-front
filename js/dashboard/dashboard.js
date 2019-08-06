@@ -27,10 +27,10 @@ xmlHttpRequest.onreadystatechange = function() {
                         let sessionElement = document.createElement('div');
                         let session = sessions[i];
 
-                        sessionElement.textContent = 'Aborted: ' + session['aborted'] + ', ' + 'Executions: ' +
-                            session['executions'] + ', ' + 'Failed: ' + session['failed'] + ', ' + 'Initialized: ' +
-                            session['initialized'].slice(0, END) + ', ' + 'Running: ' + session['running'] + ', ' +
-                            'Skipped: ' + session['skipped'] + ', ' + 'Successful: ' + session['successful'];
+                        sessionElement.textContent = `Aborted: ${session['aborted']}, Executions: 
+                        ${session['executions']}, Failed: ${session['failed']}, Initialized: 
+                        ${session['initialized'].slice(0, END)}, Running: ${session['running']}, 
+                        Skipped: ${session['skipped']}, Successful: ${session['successful']}`;
 
                         sessionsElement.appendChild(sessionElement);
                     }
