@@ -1,8 +1,7 @@
 addons:
   sonarcloud:
     organization: "henryssondaniel-github"
-    token:
-      secure: $SONAR_TOKEN
+    token: $SONAR_TOKEN
 language: node_js
 matrix:
   include:
